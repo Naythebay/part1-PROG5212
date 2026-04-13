@@ -1,0 +1,207 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package prog5121part1;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom; 
+import static java.time.InstantSource.system;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.stream.Stream;
+import prog5121part1.CAPP.Login;
+
+/**
+ *
+ * @author User
+ */
+public class CAPP {
+    public static void main (String[] args) {
+        Scanner scanner = new Scanner (System.in);
+        ArrayList<Login> users = new ArrayList<> (); // Store multiple users
+        
+        System.out.println ("\nWelcome to APPCHAT!Please choose an option");
+        
+        while (true) {
+            // Display menu after each action
+            System.out.println("\nMain Menu:");
+            System.out.println("1.Register");
+            System.out.println("2.Login");
+            System.out.println("3.Exit");
+            
+            int choice = scanner.nextInt();
+            scanner.nextLine(); //Consume newline
+            
+            switch (choice) {
+                case 1: // Registration
+                    System.out.print("Enter username:");
+                    String username = scanner.nextLine();
+                    System.out.println("Username successfully captured!");
+                    //validation of username
+                    boolean validUsername = username.contains ("-") &&username.length()<=5;
+                    if(!validUsername){
+                        System.out.println("Username must contain at least one underscore(_)and be no longer than 5 characters long.");
+                        break;
+                    }
+                    System.out.print("Enter password");
+                    String password = scanner.nextLine();
+                    System.out.println("Password succesffully captured");
+                    //validate password
+                    boolean validPassword = password.length()>=8 && password.matches(".*[A-Z].")&& password.matches (".*\\d.*")&&
+                            password.matches(".*[!@#$%^&*()].*");
+                    if (!validPassword) {
+                        System.out.println("Password must be at 8 characters long,contain an uppercase letter,number and special characters");
+                        break;
+                    }
+                    System.out.println("Enter A SA phone nymber:(e.g +27838968976:");
+                    String phoneNumber = scanner.nextLine();
+                    System.out.println("Cellphone number is successfully added");
+                    //validate phone number
+                    String regex = "\\+27[6-8]\\{8}";
+                    if (!phoneNumber.matches(regex)){
+                        System.out.println("invalid phone number format! use +27*********");
+                        break;
+                    }
+                    //check if the user already exists
+                    boolean userExists = users.stream().anyMatch(u->u.getUsername().equals(username));
+                    if (userExists){
+                        System.out.println("Username already exists.Please choose another username.");
+                        break;
+                    }
+                    //add the new user
+                    users.add(new Login(username,password,phoneNumber));
+                    System.out.println("User registered successfully!");
+                    //Welcome the user and transition to login
+                    System.out.println("Welcome"+ username+"!You can now log in");
+                    System.out.println("Redirecting you to login page.......\n");
+                    
+                    //immediately prompt the user to login
+                    promptLogin(scanner,users);
+                    break;
+                    
+                case 2://login
+                    if (users.isEmpty()){
+                        System.out.println("No users are registered yet.Please register first");
+                        break;
+                    }
+                //prompt the user to login
+                  promptLogin(scanner,users);
+                 break;
+                 
+                case 3://Exit
+                    System.out.println("Goodbye!!");
+          scanner.close();
+          return;
+          
+                default:
+                    System.out.println("invalid option.please choose 1,2 or 3");
+            }
+        }
+    }
+    
+    // Login Method login logic
+    private static CAPPptLogin (Scanner scanner,ArrayList<Login>users) {
+     
+ System.out.print("Enter username");
+ String enteredUsername = scanner.nextLine ();
+ 
+ System.out.print("Enter password:");
+ String enterPassword = scanner.nextLine ();
+ 
+ //Find user
+ Login user = user.stream()
+         .filter(u-> u.getUsername().equals (enteredUsername))
+         .findFirst ()
+         .orElse(null);
+ 
+! = null &&  //Check login
+        Login status= user
+user.loginUser (enteredUsername);
+ 
+ // Display result
+ if (user!= null){
+     System .out.printin (user.returnLoginStatus (status));
+ } else {
+     System.out.printin("User not found");
+ }
+    }
+}
+// Login class
+class Login {
+    
+    private String username;
+    private String passwordHash;
+    private String phone;
+    private byte[] salt;
+    
+ // Construtor
+    public Login (String username ,String password,String phone) {
+        this .username = username;
+        this .salt = genarateSalt ();
+        this.passwordHash=HashPassword (password,salt);
+        this.phone = phone;
+    }
+    
+//Getter
+    public String getUsername () {
+        return usernamme ;
+    }
+    
+//Login check 
+    public boolean loginUser (String enteredPassword) {
+        return this. passwordHash.equals (hashPassword (enteredPassword,salt));
+    }
+    
+    //Return message
+    public String returnLoginStatus (boolean status) {
+        return status ? "Login successful!" :"Invalid password".;
+    }
+    
+    //Hash password
+    private String hashPassword ,byte [] salt {
+    try{
+     MessegeDigest md = MessageDigest .getInstance ("ch&&sec@ke99!");
+     md.update (salt);
+     byte[] hash = md.digest (password.getBytes());
+     
+     StringBuilder sb = new StringBuilder ();
+     for (byte b : hash){
+         sb.apped (String.format ("02",b));
+     }
+     
+     return sb.toString ();
+     
+     ] catch (Exeption e) {
+             throw new RuntimeExeption (e);
+             }
+    }
+    
+    // Generate salt
+    private byte [] genarateSalt () {
+        SecureRandom random = SecureRandom ();
+        byte[]salt = new byte [16];
+        random . nextBytes (salt);
+        return salt ;
+    }
+}
+     }
+            
+    }
+               
+    }
+    }
+    
+    
+
+ 
+    
+    
+        
+ 
+
+       
+    
+    
+
+   
